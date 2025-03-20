@@ -1,6 +1,7 @@
 package com.example.pokemonapp.controler
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import com.example.pokemonapp.model.Pokemon
 import androidx.compose.foundation.layout.Row
@@ -24,7 +25,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
 @Composable
-fun PokemonListItem(pokemon: Pokemon) {
+fun PokemonListItem(pokemon: Pokemon,navigateToProfile: (Pokemon) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -33,9 +34,7 @@ fun PokemonListItem(pokemon: Pokemon) {
         elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Row( Modifier.clickable { navigateToProfile(pokemon) }) {
             PokemonImage(pokemon)
             Column(
                 modifier = Modifier

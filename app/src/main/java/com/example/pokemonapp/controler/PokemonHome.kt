@@ -8,18 +8,19 @@ import androidx.compose.ui.unit.dp
 import com.example.pokemonapp.services.ApiService
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
+import com.example.pokemonapp.model.Pokemon
 
 @Composable
-fun PokemonHomeContent(modifier: Modifier = Modifier) {
+fun PokemonHomeContent(navigateToProfile: (Pokemon) -> Unit, modifier: Modifier) {
+
     val pokemons = remember { ApiService.pokemonList }
     LazyColumn(
-        modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(
             items = pokemons,
             itemContent = {
-                PokemonListItem(pokemon = it)
+                PokemonListItem(pokemon = it,navigateToProfile)
             }
         )
     }
