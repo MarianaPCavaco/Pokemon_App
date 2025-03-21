@@ -10,5 +10,7 @@
     <string name="weight">Weight</string>
     <string name="abilities">Abilities</string>
     <string name="location_area_encounters">Location Area Encounters</string>
+    <string name="types">Types</string>
+    <string name="species">Species\n</string>
 
 </resources>

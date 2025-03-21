@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.example.pokemonapp.model.Pokemon
 import com.example.pokemonapp.services.ApiService
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
+import com.example.pokemonapp.view.PokemonHomeContent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

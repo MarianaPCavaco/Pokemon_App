@@ -65,13 +65,33 @@ object ApiService {
                 val height = response.getString("height")
                 val weight = response.getString("weight")
 
+                val abilities = mutableListOf<String>()
+                val abilitiesArray = response.getJSONArray("abilities")
+                for (i in 0 until abilitiesArray.length()) {
+                    val abilityObject = abilitiesArray.getJSONObject(i)
+                    val abilityName = abilityObject.getJSONObject("ability").getString("name")
+                    abilities.add(abilityName)
+                }
+
+                val types = mutableListOf<String>()
+                val typesArray = response.getJSONArray("types")
+                for (i in 0 until typesArray.length()) {
+                    val typeObject = typesArray.getJSONObject(i)
+                    val typeName = typeObject.getJSONObject("type").getString("name")
+                    types.add(typeName)
+                }
+                val species = response.getJSONObject("species").getString("name")
+
                 val newPokemon = Pokemon(
                     name = name,
                     pokemonImage = pokemonImage,
                     url = url,
                     base_experience = baseExperience,
                     height = height,
-                    weight = weight)
+                    weight = weight,
+                    abilities = abilities,
+                    types = types,
+                    species = species)
 
                 pokemonList.add(newPokemon)
 

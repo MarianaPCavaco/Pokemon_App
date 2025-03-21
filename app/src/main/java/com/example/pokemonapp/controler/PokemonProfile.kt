@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.Text
 import com.example.pokemonapp.model.Pokemon
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
+import com.example.pokemonapp.view.ProfileScreen
 
 class PokemonProfileActivity : AppCompatActivity() {
 

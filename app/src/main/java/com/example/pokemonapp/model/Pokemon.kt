@@ -8,5 +8,8 @@ data class Pokemon(
     val url: String,
     val base_experience: String,
     val height: String,
-    val weight: String
+    val weight: String,
+    val abilities: List<String> = emptyList(),
+    val types: List<String> = emptyList(),
+    val species: String
     ) : Serializable
