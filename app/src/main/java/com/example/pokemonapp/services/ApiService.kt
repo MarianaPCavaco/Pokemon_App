@@ -3,6 +3,7 @@ package com.example.pokemonapp.services
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -13,27 +14,35 @@ import com.example.pokemonapp.utilities.URL_GET_POKEMONS
 object ApiService {
 
     val pokemonList = mutableStateListOf<Pokemon>()
+    var nextUrl = mutableStateOf<String?>(null)
+    var previousUrl = mutableStateOf<String?>(null)
 
     fun getAllPokemon(context: Context, complete: (Boolean) -> Unit) {
-        val url = URL_GET_POKEMONS
+        loadPokemonPage(context, URL_GET_POKEMONS, complete)
+    }
+
+    fun loadPokemonPage(context: Context, url: String, complete: (Boolean) -> Unit) {
 
         val pokemonRequest = object : JsonObjectRequest(Request.Method.GET, url, null, Response.Listener { response ->
             try {
                 val results = response.getJSONArray("results")
+                nextUrl.value = response.optString("next", null)
+                previousUrl.value = response.optString("previous", null)
+
                 pokemonList.clear()
 
                 for (i in 0 until results.length()) {
                     val pokemon = results.getJSONObject(i)
                     val name = pokemon.getString("name")
-                    val url = pokemon.getString("url")
-
-                    val id = url.trimEnd('/').split("/").last()
+                    val urlPokemon = pokemon.getString("url")
+                    val id = urlPokemon.trimEnd('/').split("/").last()
                     val pokemonImage = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png"
 
-                    fetchPokemonDetails(context, id, pokemonImage, name, complete)
+                    pokemonDetails(context, id, pokemonImage, name, complete)
                 }
-                Log.d("API", "Pokemons carregados: ${pokemonList.size}")
+
                 complete(true)
+
             } catch (e: Exception) {
                 Log.e("API", "Erro ao interpretar JSON: $e")
                 complete(false)
@@ -50,7 +59,7 @@ object ApiService {
         Volley.newRequestQueue(context).add(pokemonRequest)
     }
 
-    private fun fetchPokemonDetails(
+    private fun pokemonDetails(
         context: Context,
         pokemonId: String,
         pokemonImage: String,
@@ -113,3 +122,4 @@ object ApiService {
         Volley.newRequestQueue(context).add(detailRequest)
     }
 }
+
