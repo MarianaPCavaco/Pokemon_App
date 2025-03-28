@@ -26,9 +26,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pokemonapp.R
-import com.example.pokemonapp.model.Pokemon
 
-@Composable
+/*@Composable
 fun ProfileScreen(pokemon: Pokemon) {
     val scrollState = rememberScrollState()
 
@@ -100,9 +99,6 @@ private fun ProfileContent(pokemon: Pokemon, containerHeight: Dp) {
             label = stringResource(R.string.species),
             value = pokemon.species
         )
-
-
-        Spacer(Modifier.height((containerHeight - 320.dp).coerceAtLeast(0.dp)))
     }
 }
 
@@ -134,3 +130,5 @@ fun ProfileProperty(label: String, value:String){
         )
     }
 }
+
+ */

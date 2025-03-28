@@ -3,7 +3,6 @@ package com.example.pokemonapp.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
-import com.example.pokemonapp.model.Pokemon
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
-@Composable
+/*@Composable
 fun PokemonListItem(pokemon: Pokemon,navigateToProfile: (Pokemon) -> Unit) {
     Card(
         modifier = Modifier
@@ -69,3 +68,4 @@ private fun PokemonImage(pokemon: Pokemon) {
             .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
     )
 }
+*/
