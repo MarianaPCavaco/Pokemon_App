@@ -29,8 +29,7 @@ class MainActivity : ComponentActivity() {
                     composable("pokemon_list_screen") {
                         PokemonListScreen(navController = navController)
                     }
-                    composable(
-                        "pokemon_details_screen/{pokemonName}",
+                    composable("pokemon_details_screen/{pokemonName}",
                         arguments = listOf(
                             navArgument("pokemonName") {
                                 type = NavType.StringType
