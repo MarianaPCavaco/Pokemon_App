@@ -13,9 +13,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppModule {
+class AppModule {
 
-    @Singleton
     @Provides
     fun providePokeApi(): PokeApi{
         return Retrofit.Builder()

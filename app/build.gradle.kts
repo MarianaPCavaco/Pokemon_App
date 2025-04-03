@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -80,14 +81,13 @@ dependencies {
 
     // Coroutine Lifecycle Scopes
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
-    implementation (libs.androidx.lifecycle.runtime.ktx.v231)
 
     //Dagger - Hilt
+
     implementation(libs.hilt.android.v2511)
     implementation(libs.androidx.hilt.common)
     ksp(libs.androidx.hilt.compiler)
-    ksp(libs.androidx.room.compiler)
-    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
+    ksp(libs.dagger.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.androidx.hilt.work)

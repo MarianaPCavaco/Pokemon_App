@@ -34,7 +34,7 @@ import com.example.pokemonapp.R
 import com.example.pokemonapp.model.PokedexListEntry
 
 @Composable
-fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewModel) {
+fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewModel =  hiltViewModel()) {
 
     val entries by viewModel.pokemonList.observeAsState(emptyList())
 
