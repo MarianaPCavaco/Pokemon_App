@@ -83,11 +83,11 @@ dependencies {
     implementation (libs.androidx.lifecycle.runtime.ktx.v231)
 
     //Dagger - Hilt
-    implementation(libs.hilt.android.v240)
+    implementation(libs.hilt.android.v2511)
     implementation(libs.androidx.hilt.common)
     ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
-    implementation (libs.androidx.hilt.lifecycle.viewmodel)
+    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
     implementation (libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.androidx.hilt.work)
