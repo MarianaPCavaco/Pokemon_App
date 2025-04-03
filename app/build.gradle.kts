@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,14 +82,20 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation (libs.androidx.lifecycle.runtime.ktx.v231)
 
-    // Coil
-    implementation (libs.coil)
-    implementation (libs.accompanist.coil)
-
     //Dagger - Hilt
-    implementation (libs.hilt.android)
+    implementation(libs.hilt.android.v240)
+    implementation(libs.androidx.hilt.common)
+    ksp(libs.androidx.hilt.compiler)
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.hilt.lifecycle.viewmodel)
     implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.fragment)
+    implementation(libs.androidx.hilt.work)
+
+    implementation (libs.androidx.work.runtime.ktx)
+
 }
+
+
+
 

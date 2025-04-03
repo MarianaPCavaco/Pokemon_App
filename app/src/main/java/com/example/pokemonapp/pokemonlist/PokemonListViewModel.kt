@@ -1,7 +1,7 @@
 package com.example.pokemonapp.pokemonlist
 
-
-import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemonapp.model.PokedexListEntry
@@ -16,9 +16,17 @@ class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository
 ): ViewModel() {
 
-    var pokemonList = mutableStateOf<List<PokedexListEntry>>(listOf())
-    var loadError = mutableStateOf("")
-    var isLoading = mutableStateOf(false)
+    private val _pokemonList = MutableLiveData<List<PokedexListEntry>>(emptyList())
+    val pokemonList: LiveData<List<PokedexListEntry>> get() = _pokemonList
+
+    private val _loadError = MutableLiveData<String>("")
+    val loadError: LiveData<String> get() = _loadError
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _endReached = MutableLiveData(false)
+    val endReached: LiveData<Boolean> get() = _endReached
 
     init {
         loadPokemon()
@@ -26,7 +34,7 @@ class PokemonListViewModel @Inject constructor(
 
     fun loadPokemon() {
         viewModelScope.launch {
-            isLoading.value = true
+            _isLoading.value = true
 
             val result = repository.getPokemonList(20, 0)
 
@@ -42,16 +50,16 @@ class PokemonListViewModel @Inject constructor(
                         PokedexListEntry(entry.name, url, id.toInt())
                     }
 
-                    loadError.value = ""
-                    isLoading.value = false
-                    pokemonList.value += pokedexEntries
+                    _loadError.value = ""
+                    _isLoading.value = false
+                    _pokemonList.value = pokedexEntries
                 }
                 is Resource.Error -> {
-                    loadError.value = result.message!!
-                    isLoading.value = false
+                    _loadError.value = result.message!!
+                    _isLoading.value = false
                 }
             }
-
+            _isLoading.value = false
         }
     }
 }

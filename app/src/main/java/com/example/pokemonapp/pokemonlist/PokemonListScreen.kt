@@ -18,6 +18,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,9 +34,9 @@ import com.example.pokemonapp.R
 import com.example.pokemonapp.model.PokedexListEntry
 
 @Composable
-fun PokemonListScreen(navController : NavController) {
-    val viewModel: PokemonListViewModel = hiltViewModel()
-    val entries = viewModel.pokemonList.value
+fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewModel = hiltViewModel()) {
+
+    val entries by viewModel.pokemonList.observeAsState(emptyList())
 
     Surface(
         color = Color.White,

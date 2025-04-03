@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+abstract class AppModule {
 
     @Singleton
     @Provides
@@ -21,6 +21,8 @@ class AppModule {
         api: PokeApi
     ) = PokemonRepository(api)
 
+    @Singleton
+    @Provides
     fun providePokeApi(): PokeApi{
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
