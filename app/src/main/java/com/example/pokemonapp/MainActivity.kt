@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.pokemonapp.pokemondetail.PokemonDetailScreen
 import com.example.pokemonapp.pokemonlist.PokemonListScreen
 import com.example.pokemonapp.pokemonlist.PokemonListViewModel
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
@@ -19,8 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     composable("pokemon_list_screen") {
                         PokemonListScreen(navController = navController)
                     }
-                    composable("pokemon_details_screen/{pokemonName}",
+                    composable("pokemon_detail_screen/{pokemonName}",
                         arguments = listOf(
                             navArgument("pokemonName") {
                                 type = NavType.StringType
@@ -45,7 +44,12 @@ class MainActivity : ComponentActivity() {
                         val pokemonName = remember {
                             it.arguments?.getString("pokemonName")
                         }
+                        PokemonDetailScreen(
+                            pokemonName = pokemonName?.lowercase() ?: "",
+                            navController = navController
+                        )
                     }
+
                 }
             }
         }

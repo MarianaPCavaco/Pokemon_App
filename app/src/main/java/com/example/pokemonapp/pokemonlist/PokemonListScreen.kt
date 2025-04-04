@@ -75,7 +75,7 @@ fun PokemonItem(
             .fillMaxWidth()
             .height(110.dp)
             .clickable {
-                navController.navigate("pokemon_detail/${entry.pokemonName}")
+                navController.navigate("pokemon_detail_screen/${entry.pokemonName}")
             },
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -115,11 +115,18 @@ fun PokemonItem(
 @Composable
 fun PokedexList(
     entries: List<PokedexListEntry>,
-    navController: NavController
+    navController: NavController,
+    viewModel: PokemonListViewModel = hiltViewModel()
 ) {
+    val isLoading by viewModel.isLoading.observeAsState(false)
+    val endReached by viewModel.endReached.observeAsState(false)
+
     LazyColumn {
         itemsIndexed(items = entries) { index, item ->
             PokemonItem(entry = item, navController = navController)
+            if (index >= entries.size - 3 && !isLoading && !endReached) {
+                viewModel.loadPokemon()
+            }
         }
     }
 }
