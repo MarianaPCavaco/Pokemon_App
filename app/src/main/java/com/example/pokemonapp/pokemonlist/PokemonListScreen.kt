@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -36,7 +37,7 @@ import com.example.pokemonapp.model.PokedexListEntry
 @Composable
 fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewModel =  hiltViewModel()) {
 
-    val entries by viewModel.pokemonList.observeAsState(emptyList())
+    val entries by viewModel.pokemonList.collectAsState(emptyList())
 
     Surface(
         color = Color.White,
@@ -118,8 +119,8 @@ fun PokedexList(
     navController: NavController,
     viewModel: PokemonListViewModel = hiltViewModel()
 ) {
-    val isLoading by viewModel.isLoading.observeAsState(false)
-    val endReached by viewModel.endReached.observeAsState(false)
+    val isLoading by viewModel.isLoading.collectAsState(false)
+    val endReached by viewModel.endReached.collectAsState(false)
 
     LazyColumn {
         itemsIndexed(items = entries) { index, item ->
