@@ -3,35 +3,38 @@ package com.example.pokemonapp.pokemondetail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.pokemonapp.R
 import com.example.pokemonapp.data.remote.responses.Pokemon
-import com.example.pokemonapp.data.remote.responses.PokemonList
-import com.example.pokemonapp.model.PokedexListEntry
 import com.example.pokemonapp.util.Resource
 
 @Composable
 fun PokemonDetailScreen(
     pokemonName: String,
-    navController: NavController,
     viewModel: PokemonDetailViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -49,7 +52,7 @@ fun PokemonDetailScreen(
                         .verticalScroll(scrollState),
                 ) {
                     ProfileHeader(pokemonInfo, this@BoxWithConstraints.maxHeight)
-                    /*ProfileContent(pokemon, this@BoxWithConstraints.maxHeight)*/
+                    ProfileContent(pokemonInfo, this@BoxWithConstraints.maxHeight)
                 }
             }
         }
@@ -74,27 +77,29 @@ private fun ProfileHeader(
         contentScale = ContentScale.Crop,
     )
 }
-/*
+
 @Composable
-private fun ProfileContent(pokemon: Pokemon, containerHeight: Dp) {
+private fun ProfileContent(
+    entry: Resource<Pokemon>,
+    containerHeight: Dp) {
     Column {
         Spacer(modifier = Modifier.height(8.dp))
 
-        Title(pokemon)
+        Title(entry)
 
         ProfileProperty(
             label = stringResource(R.string.base_experience),
-            value = pokemon.base_experience
+            value = entry.data?.base_experience.toString()
         )
 
         ProfileProperty(
             label = stringResource(R.string.height),
-            value = pokemon.height
+            value = entry.data?.height.toString()
         )
 
         ProfileProperty(
             label = stringResource(R.string.weight),
-            value = pokemon.weight
+            value = entry.data?.weight.toString()
         )
 
         Spacer(Modifier.height((containerHeight - 320.dp).coerceAtLeast(0.dp)))
@@ -102,13 +107,15 @@ private fun ProfileContent(pokemon: Pokemon, containerHeight: Dp) {
 }
 
 @Composable
-private fun Title(pokemon: Pokemon){
+private fun Title(entry: Resource<Pokemon>){
     Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 16.dp)){
-        Text(
-            text = pokemon.name,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
+        entry.data?.let {
+            Text(
+                text = it.name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
@@ -128,4 +135,4 @@ fun ProfileProperty(label: String, value:String){
             overflow = TextOverflow.Visible
         )
     }
-}*/
+}
