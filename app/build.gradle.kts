@@ -69,6 +69,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.coil.compose)
 
+    //Unit test
+    testImplementation (libs.junit.jupiter)
+    testImplementation (libs.kotlinx.coroutines.test)
+    testImplementation (libs.mockk)
+    testImplementation (libs.mockk.android)
+    testImplementation (libs.turbine)
+    testImplementation(kotlin("test"))
+
     // Retrofit
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
@@ -93,6 +101,7 @@ dependencies {
     implementation(libs.androidx.hilt.work)
 
     implementation (libs.androidx.work.runtime.ktx)
+
 
 }
 
