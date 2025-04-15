@@ -12,5 +12,6 @@
     <string name="location_area_encounters">Location Area Encounters</string>
     <string name="types">Types</string>
     <string name="species">Species\n</string>
+    <string name="location_area">Location Area</string>
 
 </resources>

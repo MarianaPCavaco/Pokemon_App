@@ -105,7 +105,7 @@ fun PokemonItem(
                     .weight(0.8f)
             ) {
                 Text(
-                    text = entry.pokemonName,
+                    text = entry.pokemonName.replaceFirstChar { char -> char.uppercaseChar() },
                     fontWeight = FontWeight.Bold
                 )
             }

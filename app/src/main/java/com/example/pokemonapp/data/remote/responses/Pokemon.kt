@@ -7,8 +7,8 @@ data class Pokemon(
     val id: Int,
     val location_area_encounters: String,
     val name: String,
-    val species: Species,
-    val sprites: Sprites,
+    val species: Species?,
+    val sprites: Sprites?,
     val stats: List<Stat>,
     val types: List<Type>,
     val weight: Int

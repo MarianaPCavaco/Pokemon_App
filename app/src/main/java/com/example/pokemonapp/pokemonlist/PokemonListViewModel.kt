@@ -1,7 +1,5 @@
 package com.example.pokemonapp.pokemonlist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemonapp.model.PokedexListEntry
@@ -30,7 +28,7 @@ class PokemonListViewModel @Inject constructor(
     private val _endReached = MutableStateFlow(false)
     val endReached: MutableStateFlow<Boolean> get() = _endReached
 
-    private var currentPage = 0
+    var currentPage = 0
 
     init {
         loadPokemon()
@@ -61,7 +59,7 @@ class PokemonListViewModel @Inject constructor(
                     _pokemonList.value = _pokemonList.value + pokedexEntries
                 }
                 is Resource.Error -> {
-                    _loadError.value = result.message!!
+                    _loadError.value = result.message ?: "Unknown error"
                     _isLoading.value = false
                 }
                 is Resource.Loading -> {

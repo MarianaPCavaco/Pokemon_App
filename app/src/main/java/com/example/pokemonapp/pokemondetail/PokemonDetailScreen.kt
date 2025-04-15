@@ -102,16 +102,37 @@ private fun ProfileContent(
             value = entry.data?.weight.toString()
         )
 
-        Spacer(Modifier.height((containerHeight - 320.dp).coerceAtLeast(0.dp)))
+        entry.data?.types?.let { types ->
+            val typeNames = types.joinToString(", ") { it.type.name.replaceFirstChar { char -> char.uppercaseChar() } }
+
+            ProfileProperty(
+                label = stringResource(R.string.types),
+                value = typeNames
+            )
+        }
+        entry.data?.abilities?.let { abilities ->
+            val abilityNames = abilities.joinToString(", ") { it.ability.name.replaceFirstChar { char -> char.uppercaseChar() } }
+            ProfileProperty(
+                label = stringResource(R.string.abilities),
+                value = abilityNames
+            )
+        }
+        entry.data?.stats?.forEach { stat ->
+            ProfileProperty(
+                label = stat.stat.name.replaceFirstChar { it.uppercaseChar() },
+                value = stat.base_stat.toString()
+            )
+        }
     }
 }
+
 
 @Composable
 private fun Title(entry: Resource<Pokemon>){
     Column (modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 16.dp)){
         entry.data?.let {
             Text(
-                text = it.name,
+                text = it.name.replaceFirstChar { char -> char.uppercaseChar() },
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
