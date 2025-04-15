@@ -70,7 +70,7 @@ private fun ProfileHeader(
                 .data(entry.data?.sprites?.front_default)
                 .build()
         ),
-        contentDescription = entry.data?.name,
+        contentDescription = "${entry.data?.name} Image",
         modifier = Modifier
             .heightIn(max = containerHeight / 2)
             .fillMaxWidth(),

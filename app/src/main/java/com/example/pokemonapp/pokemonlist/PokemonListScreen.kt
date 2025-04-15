@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,7 +92,7 @@ fun PokemonItem(
                         .data(entry.imageUrl)
                         .build()
                 ),
-                contentDescription = entry.pokemonName,
+                contentDescription = "${entry.pokemonName} Image",
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.2f)
@@ -106,7 +107,8 @@ fun PokemonItem(
             ) {
                 Text(
                     text = entry.pokemonName.replaceFirstChar { char -> char.uppercaseChar() },
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
