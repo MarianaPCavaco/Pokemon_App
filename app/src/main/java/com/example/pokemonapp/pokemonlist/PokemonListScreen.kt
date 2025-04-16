@@ -14,19 +14,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -45,7 +57,16 @@ fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewM
         modifier = Modifier.fillMaxSize()
     ) {
         Column(modifier = Modifier) {
+            Spacer(modifier = Modifier.height(16.dp))
             PokemonLogo()
+            SearchBar(
+                hint = "Search...",
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+            ) {
+                viewModel.searchPokemonList(it)
+            }
             Spacer(modifier = Modifier.height(16.dp))
             PokedexList(entries = entries, navController = navController)
             }
@@ -61,7 +82,7 @@ fun PokemonLogo(){
         contentDescription = "Pokemon Logo",
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(100.dp)
     )
 }
 
@@ -123,15 +144,59 @@ fun PokedexList(
 ) {
     val isLoading by viewModel.isLoading.collectAsState(false)
     val endReached by viewModel.endReached.collectAsState(false)
+    val isSearching by viewModel.isSearching.collectAsState(false)
 
     LazyColumn {
         itemsIndexed(items = entries) { index, item ->
             PokemonItem(entry = item, navController = navController)
-            if (index >= entries.size - 3 && !isLoading && !endReached) {
+            if (index >= entries.size - 3 && !isLoading && !endReached && !isSearching) {
                 viewModel.loadPokemon()
             }
         }
     }
+}
+
+@Composable
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    hint: String = "",
+    onSearch: (String) -> Unit = {}
+){
+    var text by remember {
+        mutableStateOf("")
+    }
+
+    OutlinedTextField(
+        value = text,
+        onValueChange = {
+            text = it
+            onSearch(it)
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        label = { Text(hint) },
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Ícone de procura"
+            )
+        },
+        trailingIcon = {
+            if (text.isNotEmpty()) {
+                IconButton(onClick = {
+                    text = ("")
+                    onSearch("")
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Eliminar texto"
+                    )
+                }
+            }
+        }
+    )
 }
 
 
