@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -14,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.pokemonapp.pokemondetail.PokemonDetailScreen
 import com.example.pokemonapp.pokemonlist.PokemonListScreen
-import com.example.pokemonapp.pokemonlist.PokemonListViewModel
 import com.example.pokemonapp.ui.theme.PokemonAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

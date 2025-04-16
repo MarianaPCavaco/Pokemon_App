@@ -1,20 +1,21 @@
 package com.example.pokemonapp.pokemonlist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -28,17 +29,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -92,21 +91,61 @@ fun PokemonItem(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val types = entry.types.ifEmpty { listOf("Unknown") }
+    val capitalizedTypes = types.map { it.replaceFirstChar { char -> char.uppercaseChar() } }
+
+    val primaryType = types.first().lowercase()
+
+    val backgroundColor = when (primaryType) {
+        "grass" -> Color(0xFF78C850)
+        "fire" -> Color(0xFFF08030)
+        "water" -> Color(0xFF6890F0)
+        "bug" -> Color(0xFFA8B820)
+        "normal" -> Color(0xFFA8A878)
+        "poison" -> Color(0xFFA040A0)
+        "electric" -> Color(0xFFF8D030)
+        "ground" -> Color(0xFFE0C068)
+        "fairy" -> Color(0xFFEE99AC)
+        else -> Color(0xFFD3D3D3)
+    }
+
     Card(
         modifier = modifier
-            .padding(8.dp, 4.dp)
             .fillMaxWidth()
-            .height(110.dp)
+            .height(140.dp)
             .clickable {
                 navController.navigate("pokemon_detail_screen/${entry.pokemonName}")
             },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Row(
-            Modifier
-                .padding(4.dp)
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
+                .background(backgroundColor)
+                .padding(12.dp)
         ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.align(Alignment.TopStart)
+            ) {
+                Text(
+                    text = entry.pokemonName.replaceFirstChar { it.uppercase() },
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                capitalizedTypes.forEach { type ->
+                    Text(
+                        text = type,
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
+            }
+
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
@@ -115,26 +154,14 @@ fun PokemonItem(
                 ),
                 contentDescription = "${entry.pokemonName} Image",
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.2f)
+                    .size(100.dp)
+                    .align(Alignment.BottomEnd)
             )
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxHeight()
-                    .weight(0.8f)
-            ) {
-                Text(
-                    text = entry.pokemonName.replaceFirstChar { char -> char.uppercaseChar() },
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
         }
     }
 }
+
+
 
 @Composable
 fun PokedexList(
@@ -146,7 +173,14 @@ fun PokedexList(
     val endReached by viewModel.endReached.collectAsState(false)
     val isSearching by viewModel.isSearching.collectAsState(false)
 
-    LazyColumn {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         itemsIndexed(items = entries) { index, item ->
             PokemonItem(entry = item, navController = navController)
             if (index >= entries.size - 3 && !isLoading && !endReached && !isSearching) {
@@ -176,7 +210,6 @@ fun SearchBar(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         label = { Text(hint) },
-        singleLine = true,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -195,7 +228,8 @@ fun SearchBar(
                     )
                 }
             }
-        }
+        },
+        shape = RoundedCornerShape(16.dp)
     )
 }
 

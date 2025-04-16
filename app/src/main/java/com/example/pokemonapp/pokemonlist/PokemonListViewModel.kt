@@ -7,7 +7,7 @@ import com.example.pokemonapp.repository.PokemonRepository
 import com.example.pokemonapp.util.Constants.PAGE_SIZE
 import com.example.pokemonapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +32,8 @@ class PokemonListViewModel @Inject constructor(
     private val _isSearching = MutableStateFlow(false)
     val isSearching: MutableStateFlow<Boolean> get() = _isSearching
 
+    private val _fullPokemonList = MutableStateFlow<List<PokedexListEntry>>(emptyList())
+
     var currentPage = 0
 
     init {
@@ -44,28 +46,44 @@ class PokemonListViewModel @Inject constructor(
 
             val result = repository.getPokemonList(PAGE_SIZE, currentPage * PAGE_SIZE)
 
-            when (result){
+            when (result) {
                 is Resource.Success -> {
                     _endReached.value = currentPage * PAGE_SIZE >= result.data!!.count
-                    val pokedexEntries = result.data.results.mapIndexed { index, entry ->
-                        val id = if(entry.url.endsWith("/")) {
+
+                    val pokedexEntries = result.data.results.mapIndexed { _, entry ->
+                        val id = if (entry.url.endsWith("/")) {
                             entry.url.dropLast(1).takeLastWhile { it.isDigit() }
                         } else {
                             entry.url.takeLastWhile { it.isDigit() }
                         }
                         val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png"
-                        PokedexListEntry(entry.name, url, id.toInt())
+                        Triple(entry.name, url, id.toInt())
                     }
+
+                    val detailedEntries = pokedexEntries.map { (name, url, id) ->
+                        async {
+                            val info = repository.getPokemonInfo(name)
+                            val types = if (info is Resource.Success) {
+                                info.data?.types?.map { it.type.name } ?: emptyList()
+                            } else emptyList()
+                            PokedexListEntry(name, url, id, types)
+                        }
+                    }.map { it.await() }
+
                     currentPage++
+
+                    _fullPokemonList.value += detailedEntries
+                    _pokemonList.value = _fullPokemonList.value
 
                     _loadError.value = ""
                     _isLoading.value = false
-                    _pokemonList.value = _pokemonList.value + pokedexEntries
                 }
+
                 is Resource.Error -> {
-                    _loadError.value = result.message ?: "Unknown error"
+                    _loadError.value = result.message ?: "Error occured."
                     _isLoading.value = false
                 }
+
                 is Resource.Loading -> {
                     _isLoading.value = true
                 }
@@ -78,41 +96,19 @@ class PokemonListViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
 
-            val count = repository.getPokemonList(1, 0)
-
-            val result = repository.getPokemonList(count.data!!.count, 0)
-
-            if (result is Resource.Success && result.data != null) {
-                val entries = result.data.results.map { entry ->
-                    val id = if (entry.url.endsWith("/")) {
-                        entry.url.dropLast(1).takeLastWhile { it.isDigit() }
-                    } else {
-                        entry.url.takeLastWhile { it.isDigit() }
-                    }
-                    val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png"
-                    PokedexListEntry(entry.name, url, id.toInt())
-                }
-
-                if (query.isBlank()) {
-                    _pokemonList.value = entries
-                    _isSearching.value = false
-                } else {
-                    val results = entries.filter {
-                        it.pokemonName.startsWith(query.trim(), ignoreCase = true)
-                    }
-                    _pokemonList.value = results
-                    _isSearching.value = true
-                }
-
-                _loadError.value = ""
+            if (query.isBlank()) {
+                _pokemonList.value = _fullPokemonList.value
+                _isSearching.value = false
             } else {
-                _pokemonList.value = emptyList()
-                _loadError.value = "Erro ao encontrar Pokémons."
+                val results = _fullPokemonList.value.filter {
+                    it.pokemonName.startsWith(query.trim(), ignoreCase = true)
+                }
+                _pokemonList.value = results
+                _isSearching.value = true
             }
 
             _isLoading.value = false
         }
     }
-
 
 }
