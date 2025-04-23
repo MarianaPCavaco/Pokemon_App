@@ -36,6 +36,10 @@ class PokemonListViewModel @Inject constructor(
 
     private val loadedPokemonNames = mutableSetOf<String>()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: MutableStateFlow<String> get() = _searchQuery
+
+
     var currentPage = 0
 
     init {
@@ -105,6 +109,7 @@ class PokemonListViewModel @Inject constructor(
     fun searchPokemonList(query: String) {
         viewModelScope.launch {
             _isLoading.value = true
+            _searchQuery.value = query
 
             if (query.isBlank()) {
                 _pokemonList.value = _fullPokemonList.value
@@ -113,8 +118,7 @@ class PokemonListViewModel @Inject constructor(
                 val results = _fullPokemonList.value.filter {
                     it.pokemonName.startsWith(
                         query.trim(),
-                        ignoreCase = true
-                    )
+                        ignoreCase = true)
                 }
                 _pokemonList.value = results
                 _isSearching.value = true
@@ -123,4 +127,5 @@ class PokemonListViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
+
 }

@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -72,8 +71,7 @@ fun PokemonDetailScreen(
                             navController.popBackStack()
                         })
                     ProfileContent(
-                        pokemonInfo,
-                        this@BoxWithConstraints.maxHeight
+                        pokemonInfo
                     )
 
                     Spacer(modifier = Modifier.height(64.dp))
@@ -131,8 +129,7 @@ private fun ProfileHeader(
 
 @Composable
 private fun ProfileContent(
-    entry: Resource<Pokemon>,
-    containerHeight: Dp
+    entry: Resource<Pokemon>
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

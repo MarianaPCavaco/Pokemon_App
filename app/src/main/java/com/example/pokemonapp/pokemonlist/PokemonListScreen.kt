@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -209,16 +210,18 @@ fun PokedexList(
 fun SearchBar(
     modifier: Modifier = Modifier,
     hint: String = "",
-    onSearch: (String) -> Unit = {}
+    viewModel: PokemonListViewModel = hiltViewModel(),
+    onSearch: (String) -> Unit = {},
+
 ){
-    var text by remember {
-        mutableStateOf("")
-    }
+    val currentQuery by viewModel.searchQuery.collectAsState()
+    var text by remember { mutableStateOf(currentQuery) }
 
     OutlinedTextField(
         value = text,
         onValueChange = {
             text = it
+            viewModel.searchPokemonList(it)
             onSearch(it)
         },
         modifier = modifier
