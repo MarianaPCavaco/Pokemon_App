@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.DividerDefaults.color
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -47,7 +50,9 @@ import com.example.pokemonapp.R
 import com.example.pokemonapp.model.PokedexListEntry
 
 @Composable
-fun PokemonListScreen(navController : NavController, viewModel: PokemonListViewModel =  hiltViewModel()) {
+fun PokemonListScreen(
+    navController : NavController,
+    viewModel: PokemonListViewModel =  hiltViewModel()) {
 
     val entries by viewModel.pokemonList.collectAsState(emptyList())
 
@@ -92,21 +97,22 @@ fun PokemonItem(
     modifier: Modifier = Modifier
 ) {
     val types = entry.types.ifEmpty { listOf("Unknown") }
+
     val capitalizedTypes = types.map { it.replaceFirstChar { char -> char.uppercaseChar() } }
 
     val primaryType = types.first().lowercase()
 
-    val backgroundColor = when (primaryType) {
-        "grass" -> Color(0xFF78C850)
-        "fire" -> Color(0xFFF08030)
-        "water" -> Color(0xFF6890F0)
-        "bug" -> Color(0xFFA8B820)
-        "normal" -> Color(0xFFA8A878)
-        "poison" -> Color(0xFFA040A0)
-        "electric" -> Color(0xFFF8D030)
-        "ground" -> Color(0xFFE0C068)
-        "fairy" -> Color(0xFFEE99AC)
-        else -> Color(0xFFD3D3D3)
+    val backgroundColor = when (primaryType.lowercase()) {
+        "grass" -> Color(0xFF48D0B0)
+        "fire" -> Color(0xFFFF6C6C)
+        "water" -> Color(0xFF76BEFE)
+        "bug" -> Color(0xFF92D050)
+        "normal" -> Color(0xFFC6C6C6)
+        "poison" -> Color(0xFFB97FC9)
+        "electric" -> Color(0xFFFFD86F)
+        "ground" -> Color(0xFFD2B48C)
+        "fairy" -> Color(0xFFFFC0CB)
+        else -> Color(0xFFE0E0E0)
     }
 
     Card(
@@ -133,17 +139,26 @@ fun PokemonItem(
                     text = entry.pokemonName.replaceFirstChar { it.uppercase() },
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+                    color = Color.White,
+
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                capitalizedTypes.forEach { type ->
-                    Text(
-                        text = type,
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
 
+                capitalizedTypes.forEach { type ->
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .width(64.dp)
+                            .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = type,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
             }
 
             Image(
@@ -213,7 +228,7 @@ fun SearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Ícone de procura"
+                contentDescription = "Search icon"
             )
         },
         trailingIcon = {
@@ -224,7 +239,7 @@ fun SearchBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Clear,
-                        contentDescription = "Eliminar texto"
+                        contentDescription = "delete text"
                     )
                 }
             }

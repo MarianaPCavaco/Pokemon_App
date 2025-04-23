@@ -15,12 +15,12 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _pokemonList = MutableStateFlow<List<PokedexListEntry>>(emptyList())
     val pokemonList: MutableStateFlow<List<PokedexListEntry>> get() = _pokemonList
 
-    private val _loadError = MutableStateFlow<String>("")
+    private val _loadError = MutableStateFlow("")
     val loadError: MutableStateFlow<String> get() = _loadError
 
     private val _isLoading = MutableStateFlow(false)
@@ -33,6 +33,8 @@ class PokemonListViewModel @Inject constructor(
     val isSearching: MutableStateFlow<Boolean> get() = _isSearching
 
     private val _fullPokemonList = MutableStateFlow<List<PokedexListEntry>>(emptyList())
+
+    private val loadedPokemonNames = mutableSetOf<String>()
 
     var currentPage = 0
 
@@ -60,7 +62,11 @@ class PokemonListViewModel @Inject constructor(
                         Triple(entry.name, url, id.toInt())
                     }
 
-                    val detailedEntries = pokedexEntries.map { (name, url, id) ->
+                    val newEntries = pokedexEntries.filter { (name, _, _) ->
+                        !loadedPokemonNames.contains(name)
+                    }
+
+                    val detailedEntries = newEntries.map { (name, url, id) ->
                         async {
                             val info = repository.getPokemonInfo(name)
                             val types = if (info is Resource.Success) {
@@ -72,6 +78,10 @@ class PokemonListViewModel @Inject constructor(
 
                     currentPage++
 
+                    detailedEntries.forEach {
+                        loadedPokemonNames.add(it.pokemonName)
+                    }
+
                     _fullPokemonList.value += detailedEntries
                     _pokemonList.value = _fullPokemonList.value
 
@@ -80,7 +90,7 @@ class PokemonListViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _loadError.value = result.message ?: "Error occured."
+                    _loadError.value = result.message ?: "Error occurred."
                     _isLoading.value = false
                 }
 
@@ -101,7 +111,10 @@ class PokemonListViewModel @Inject constructor(
                 _isSearching.value = false
             } else {
                 val results = _fullPokemonList.value.filter {
-                    it.pokemonName.startsWith(query.trim(), ignoreCase = true)
+                    it.pokemonName.startsWith(
+                        query.trim(),
+                        ignoreCase = true
+                    )
                 }
                 _pokemonList.value = results
                 _isSearching.value = true
@@ -110,5 +123,4 @@ class PokemonListViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
-
 }
