@@ -34,8 +34,6 @@ class PokemonListViewModel @Inject constructor(
 
     private val _fullPokemonList = MutableStateFlow<List<PokedexListEntry>>(emptyList())
 
-    private val loadedPokemonNames = mutableSetOf<String>()
-
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: MutableStateFlow<String> get() = _searchQuery
 
@@ -66,11 +64,7 @@ class PokemonListViewModel @Inject constructor(
                         Triple(entry.name, url, id.toInt())
                     }
 
-                    val newEntries = pokedexEntries.filter { (name, _, _) ->
-                        !loadedPokemonNames.contains(name)
-                    }
-
-                    val detailedEntries = newEntries.map { (name, url, id) ->
+                    val detailedEntries = pokedexEntries.map { (name, url, id) ->
                         async {
                             val info = repository.getPokemonInfo(name)
                             val types = if (info is Resource.Success) {
@@ -81,10 +75,6 @@ class PokemonListViewModel @Inject constructor(
                     }.map { it.await() }
 
                     currentPage++
-
-                    detailedEntries.forEach {
-                        loadedPokemonNames.add(it.pokemonName)
-                    }
 
                     _fullPokemonList.value += detailedEntries
                     _pokemonList.value = _fullPokemonList.value

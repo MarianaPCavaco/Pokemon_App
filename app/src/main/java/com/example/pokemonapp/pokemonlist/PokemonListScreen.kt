@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.DividerDefaults.color
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -199,7 +197,7 @@ fun PokedexList(
     ) {
         itemsIndexed(items = entries) { index, item ->
             PokemonItem(entry = item, navController = navController)
-            if (index >= entries.size - 3 && !isLoading && !endReached && !isSearching) {
+            if (index >= entries.size - 8 && !isLoading && !endReached && !isSearching) {
                 viewModel.loadPokemon()
             }
         }
