@@ -33,6 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -117,7 +119,7 @@ private fun ProfileHeader(
                     .data(entry.data?.sprites?.front_default)
                     .build()
             ),
-            contentDescription = "${entry.data?.name} Image",
+            contentDescription = "Pokemon ${entry.data?.name} Image",
             modifier = Modifier
                 .heightIn(max = containerHeight)
                 .fillMaxWidth(),
@@ -203,7 +205,8 @@ private fun Title(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .semantics { contentDescription = "Pokemon Name: ${entry.data?.name}"},
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -239,7 +242,8 @@ fun TypeBadge(type: String) {
             .padding(4.dp)
             .width(120.dp)
             .height(32.dp)
-            .background(color, shape = RoundedCornerShape(16.dp)),
+            .background(color, shape = RoundedCornerShape(16.dp))
+            .semantics { contentDescription = "Type: $type"},
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -262,8 +266,7 @@ fun WeightAndHeight(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally){
             Text(
                 text = "$weight KG",
                 fontWeight = FontWeight.Bold
@@ -292,7 +295,9 @@ fun WeightAndHeight(
 fun StatBar(statName: String, value: Int, maxValue: Int = 300, color: Color) {
     Column(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 4.dp)) {
+        .padding(horizontal = 16.dp, vertical = 4.dp)
+        .semantics { contentDescription = "$statName: $value de $maxValue" }
+    ){
         Text(
             text = statName.uppercase(),
             style = MaterialTheme.typography.bodySmall,
@@ -334,7 +339,7 @@ fun BackButton(onBackClick: () -> Unit) {
         IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Back to pokemon list",
                 tint = Color.White,
                 modifier = Modifier.size(24.dp)
             )

@@ -38,6 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.pokemonapp.R
 import com.example.pokemonapp.model.PokedexListEntry
+import java.util.Locale
 
 @Composable
 fun PokemonListScreen(
@@ -82,11 +85,12 @@ fun PokemonLogo(){
     val pokemonLogo = painterResource(id = R.drawable.pokemonlogo)
     Image(
         painter = pokemonLogo,
-        contentDescription = "Pokemon Logo",
+        contentDescription = "Pokémon logo",
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
     )
+
 }
 
 @Composable
@@ -120,7 +124,10 @@ fun PokemonItem(
             .height(140.dp)
             .clickable {
                 navController.navigate("pokemon_detail_screen/${entry.pokemonName}")
-            },
+            }
+            .semantics {
+            contentDescription = "Pokémon ${entry.pokemonName} card, type: ${capitalizedTypes.joinToString()}"
+        },
         shape = RoundedCornerShape(16.dp)
     ) {
         Box(
@@ -166,7 +173,7 @@ fun PokemonItem(
                         .data(entry.imageUrl)
                         .build()
                 ),
-                contentDescription = "${entry.pokemonName} Image",
+                contentDescription = " Pokémon ${entry.pokemonName} Image",
                 modifier = Modifier
                     .size(100.dp)
                     .align(Alignment.BottomEnd)
@@ -240,7 +247,7 @@ fun SearchBar(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Clear,
-                        contentDescription = "delete text"
+                        contentDescription = "clear text"
                     )
                 }
             }
