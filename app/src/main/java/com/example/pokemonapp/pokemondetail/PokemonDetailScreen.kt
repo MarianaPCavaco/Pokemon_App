@@ -89,7 +89,9 @@ private fun ProfileHeader(
     entry: Resource<Pokemon>,
     containerHeight: Dp,
     onBackClick: () -> Unit) {
+
     val type = entry.data?.types?.firstOrNull()?.type?.name ?: "normal"
+
     val backgroundColor = when (type.lowercase()) {
         "grass" -> Color(0xFF48D0B0)
         "fire" -> Color(0xFFFF6C6C)
@@ -309,7 +311,9 @@ fun StatBar(statName: String, value: Int, maxValue: Int = 300, color: Color) {
                 .height(20.dp)
                 .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
         ) {
+
             val progress = value.coerceAtMost(maxValue).toFloat() / maxValue
+
             Box(
                 modifier = Modifier
                     .fillMaxHeight()

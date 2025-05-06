@@ -76,7 +76,9 @@ class PokemonListViewModel @Inject constructor(
 
                     currentPage++
 
-                    _fullPokemonList.value += detailedEntries
+                    val updatedList = _fullPokemonList.value + detailedEntries
+
+                    _fullPokemonList.value = updatedList.distinctBy { "${it.pokemonName}_${it.id}" }
                     _pokemonList.value = _fullPokemonList.value
 
                     _loadError.value = ""
